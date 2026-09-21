@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NRI Site Visit Request</title>
+<meta name="description" content="Site visit request form prototype for NRI real estate clients, styled to match the Casagrand acquisition form">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brand: #fcb339;
+    --brand-hover: #e39a28;
+    --brand-light: #fff3cd;
+    --secondary: #64748b;
+    --secondary-hover: #556074;
+    --text-main: #0f172a;
+    --text-muted: #475569;
+    --text-label: #666666;
+    --bg: #f8fafc;
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+    --border-focus: #fcb339;
+    --danger: #ef4444;
+    --success: #10b981;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 12px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text-main);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    margin: 0;
+    padding-inline: 16px;
+    padding-block: 28px;
+    display: flex;
+    justify-content: center;
+  }
+  .page { width: 100%; max-width: 680px; }
+
+  .preview-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; margin-bottom: 14px; flex-wrap: wrap;
+  }
+  .device-toggle {
+    display: inline-flex; gap: 4px; padding: 4px;
+    background: #eef1f5; border-radius: 999px; border: 1px solid var(--border);
+  }
+  .device-toggle button {
+    font-family: inherit; font-size: 12px; font-weight: 600;
+    padding: 6px 14px; border: none; border-radius: 999px;
+    background: transparent; color: var(--text-muted); cursor: pointer;
+  }
+  .device-toggle button.active { background: var(--text-main); color: #fff; }
+
+  .preview-shell { container-type: inline-size; width: 100%; display: flex; justify-content: center; }
+  .preview-shell.mobile-sim {
+    width: 390px; max-width: 100%; margin: 0 auto;
+    padding: 16px 8px; border-radius: 32px;
+    background: #1c1f24; box-shadow: 0 24px 60px rgba(15,23,42,0.28);
+    position: relative;
+  }
+  .preview-shell.mobile-sim .page { max-width: none; }
+
+  .badge-row { display:flex; justify-content:flex-end; margin-bottom: 12px; }
+  .proto-badge {
+    display:inline-flex; align-items:center; gap:6px;
+    font-size: 11px; font-weight: 600; letter-spacing: .02em;
+    color: var(--brand-hover); background: var(--brand-light);
+    border: 1px solid var(--brand); border-radius: 999px;
+    padding: 5px 12px;
+  }
+  .proto-badge::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--brand-hover); display:block;
+  }
+
+  header.hero {
+    background: var(--brand);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    padding: 22px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: var(--shadow-sm);
+  }
+  .wordmark { line-height: 1; }
+  .wordmark .name {
+    font-size: 22px; font-weight: 800; letter-spacing: .01em;
+    color: var(--text-main);
+  }
+  .wordmark .tagline {
+    font-size: 10.5px; font-style: italic; color: rgba(15,23,42,0.6);
+    letter-spacing: .02em; margin-top: 2px;
+  }
+  .hero-text { margin-left: auto; text-align: right; }
+  header.hero h1 {
+    font-size: 18px; font-weight: 700; color: #000;
+    margin: 0;
+  }
+  header.hero .subtitle {
+    font-size: 11.5px; color: rgba(15,23,42,0.65); margin-top: 3px;
+    letter-spacing: .01em;
+  }
+
+  .card-body {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    padding: 28px 24px 24px;
+    box-shadow: var(--shadow-md);
+  }
+
+  form { display: flex; flex-direction: column; }
+
+  section.group { margin-bottom: 26px; }
+  section.group:last-of-type { margin-bottom: 18px; }
+
+  .group-heading {
+    display: flex; align-items: center; gap: 10px;
+    margin: 0 0 6px;
+  }
+  .group-heading .bar {
+    width: 4px; height: 18px; border-radius: 2px;
+    background: var(--brand);
+    flex-shrink: 0;
+  }
+  .group-heading h2 {
+    font-size: 18px; font-weight: 700; text-transform: uppercase;
+    color: var(--brand-hover); margin: 0; letter-spacing: .01em;
+  }
+  .group-rule {
+    height: 1px; background: var(--brand-light); margin: 0 0 18px;
+  }
+
+  .grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px 16px;
+    align-items: flex-start;
+  }
+  .field {
+    display: flex; flex-direction: column; gap: 7px; min-width: 0;
+    flex: 1 1 200px; max-width: 240px;
+  }
+  .field.w-sm { flex-basis: 130px; max-width: 150px; }
+  .field.w-lg { flex-basis: 260px; max-width: 300px; }
+  .field.half { flex-basis: calc(50% - 8px); max-width: calc(50% - 8px); }
+  .field.full { flex-basis: 100%; max-width: none; }
+
+  /* Fixed single-row layout (used by Project & Customer Details) */
+  .grid.cols-3 { flex-wrap: nowrap; }
+  .grid.cols-3 .field { flex: 1 1 0; max-width: none; min-width: 0; }
+  .grid.cols-3 .field.w-lg { flex: 1.3 1 0; }
+
+  label {
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: .03em; color: var(--text-label);
+  }
+  label .req { color: var(--danger); margin-left: 2px; }
+
+  input, select {
+    width: 100%;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 400;
+    color: #333333;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  input::placeholder { color: #9aa3b0; }
+  input:focus, select:focus {
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px rgba(252,179,57,0.25);
+  }
+  input:invalid:not(:placeholder-shown) { border-color: var(--danger); }
+  select { appearance: none; -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23666666' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat: no-repeat; background-position: right 14px center;
+    padding-right: 36px;
+  }
+  select:disabled { opacity: .55; cursor: not-allowed; }
+  select:invalid { color: #9aa3b0; }
+
+  .phone-pair { display: grid; grid-template-columns: 116px 1fr; gap: 0; }
+  .phone-pair select {
+    border-radius: var(--radius-md) 0 0 var(--radius-md);
+    border-right: none;
+    padding-left: 10px;
+    padding-right: 24px;
+    font-size: 15px;
+    background-position: right 6px center;
+    background-size: 12px;
+  }
+  .phone-pair input {
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  }
+  .hint {
+    font-size: 11.5px; color: #9aa3b0; line-height: 1.4;
+  }
+  .hint.warn { color: var(--brand-hover); font-weight: 600; }
+
+  input.icon-user, input.icon-mail {
+    padding-left: 42px;
+    background-repeat: no-repeat;
+    background-position: left 14px center;
+    background-size: 16px;
+  }
+  input.icon-user {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239aa3b0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/><circle cx='12' cy='7' r='4'/></svg>");
+  }
+  input.icon-mail {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239aa3b0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='4' width='20' height='16' rx='2'/><path d='m22 7-10 6L2 7'/></svg>");
+  }
+
+  /* Pill / segmented choice groups */
+  .pill-group {
+    display: flex; flex-wrap: nowrap; gap: 8px; align-items: center;
+    align-self: flex-start;
+    border: 1px solid var(--border); border-radius: var(--radius-md);
+    background: var(--bg); padding: 6px;
+    max-width: 100%; overflow-x: auto;
+    min-height: 45px; box-sizing: border-box;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .grid.cols-3 .pill-group { flex-wrap: wrap; overflow-x: visible; }
+  .pill-group.missing {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px rgba(239,68,68,0.12);
+  }
+  .pill {
+    font-family: inherit; font-size: 13px; font-weight: 500;
+    color: #334155; background: #ffffff;
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 8px 14px; cursor: pointer; flex: 0 0 auto;
+    transition: border-color .15s, color .15s, background .15s;
+  }
+  .pill:hover { border-color: var(--brand); }
+  .pill[aria-pressed="true"] {
+    border-color: var(--brand); background: var(--brand-light);
+    color: var(--text-main); font-weight: 600;
+  }
+
+  .actions {
+    display: flex; align-items: center; gap: 12px;
+    padding-top: 6px; border-top: 1px solid var(--border);
+    margin-top: 4px; padding-top: 20px;
+  }
+  .fine-print {
+    font-size: 12px; color: var(--text-muted); flex: 1;
+  }
+  button {
+    font-family: inherit; font-weight: 700; font-size: 15px;
+    border: none; border-radius: var(--radius-md);
+    padding: 13px 24px; cursor: pointer;
+    white-space: nowrap;
+    transition: background .15s, transform .1s;
+  }
+  button.submit { color: #1a1400; background: var(--brand); }
+  button.submit:hover { background: var(--brand-hover); }
+  button.reset { color: #fff; background: var(--secondary); }
+  button.reset:hover { background: var(--secondary-hover); }
+  button:active { transform: translateY(1px); }
+
+  /* Confirmation state */
+  .confirm { display: none; }
+  .confirm.show { display: block; }
+  .confirm-card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 34px 28px; text-align: center;
+    box-shadow: var(--shadow-md);
+  }
+  .confirm-icon {
+    width: 46px; height: 46px; border-radius: 50%;
+    background: rgba(16,185,129,0.12); color: var(--success);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px; font-size: 22px; font-weight: 700;
+  }
+  .confirm-card h2 {
+    font-size: 20px; font-weight: 700; margin: 0 0 8px; color: var(--text-main);
+  }
+  .confirm-card p { color: var(--text-muted); font-size: 14px; margin: 0 0 20px; }
+
+  details.payload {
+    text-align: left; margin-top: 8px;
+    border: 1px solid var(--border); border-radius: var(--radius-md);
+    background: var(--bg); overflow: hidden;
+  }
+  details.payload summary {
+    cursor: pointer; padding: 11px 14px; font-size: 12.5px;
+    font-weight: 600; color: var(--text-muted); list-style: none;
+    display: flex; align-items: center; gap: 8px;
+  }
+  details.payload summary::-webkit-details-marker { display: none; }
+  details.payload summary::before {
+    content: "▸"; color: var(--brand-hover); transition: transform .15s;
+  }
+  details.payload[open] summary::before { transform: rotate(90deg); }
+  details.payload pre {
+    margin: 0; padding: 14px; font-size: 11.5px; line-height: 1.6;
+    color: var(--text-muted); background: var(--card-bg);
+    border-top: 1px solid var(--border);
+    overflow-x: auto; white-space: pre-wrap; word-break: break-word;
+  }
+  .reset-link {
+    display: inline-block; margin-top: 18px;
+    font-size: 13px; font-weight: 600; color: var(--brand-hover);
+    cursor: pointer; text-decoration: underline; text-underline-offset: 3px;
+    background: none; border: none; font-family: inherit; padding: 0;
+  }
+
+  footer.note {
+    margin-top: 18px; font-size: 12px; color: var(--text-muted);
+    text-align: center; line-height: 1.6;
+  }
+
+  @container (max-width: 600px) {
+    .field, .field.w-sm, .field.w-lg, .field.half, .field.full { flex-basis: 100%; max-width: none; }
+    .grid.cols-3 { flex-wrap: wrap; gap: 18px 16px; }
+    .grid.cols-3 .field, .grid.cols-3 .field.w-lg { flex-basis: 100%; max-width: none; }
+    .pill-group { flex-wrap: wrap; overflow-x: visible; }
+    header.hero { flex-direction: column; align-items: flex-start; gap: 10px; padding: 20px; }
+    .hero-text { margin-left: 0; text-align: left; }
+    header.hero h1 { font-size: 16px; }
+    .card-body { padding: 22px 16px 20px; }
+    .actions { flex-direction: column-reverse; align-items: stretch; }
+    .fine-print { text-align: center; }
+    .actions button { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+
+<div class="preview-bar">
+  <span class="proto-badge">Prototype &middot; not yet connected to CRM</span>
+  <div class="device-toggle" role="group" aria-label="Preview device">
+    <button type="button" id="desktopBtn" class="active">Desktop</button>
+    <button type="button" id="mobileBtn">Mobile</button>
+  </div>
+</div>
+
+<div class="preview-shell" id="previewShell">
+<div class="page">
+  <header class="hero">
+    <div class="wordmark">
+      <div class="name">CASAGRAND</div>
+      <div class="tagline">building aspirations</div>
+    </div>
+    <div class="hero-text">
+      <h1>NRI Site Visit Request</h1>
+      <div class="subtitle">Overseas Client Services</div>
+    </div>
+  </header>
+
+  <div class="card-body">
+    <form id="visitForm" novalidate>
+
+      <section class="group">
+        <div class="group-heading"><span class="bar"></span><h2>Project &amp; Customer Details</h2></div>
+        <div class="group-rule"></div>
+        <div class="grid cols-3">
+          <div class="field">
+            <label for="zone">Zone <span class="req">*</span></label>
+            <select id="zone" required>
+              <option value="" disabled selected>Choose</option>
+              <option>Chennai</option>
+              <option>Bangalore</option>
+              <option>Hyderabad</option>
+              <option>Coimbatore</option>
+              <option>Pune</option>
+            </select>
+          </div>
+          <div class="field w-lg">
+            <label for="project">Project <span class="req">*</span></label>
+            <select id="project" required disabled>
+              <option value="" selected>Pick zone</option>
+            </select>
+            <span class="hint warn">Placeholder — replace with confirmed project names.</span>
+          </div>
+          <div class="field">
+            <label>Customer Type <span class="req">*</span></label>
+            <div class="pill-group" id="customerTypeGroup" data-field="customerType" role="group" aria-label="Customer Type">
+              <button type="button" class="pill" data-value="New">New</button>
+              <button type="button" class="pill" data-value="Existing Customer">Existing</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="group">
+        <div class="group-heading"><span class="bar"></span><h2>Personal Information</h2></div>
+        <div class="group-rule"></div>
+        <div class="grid">
+          <div class="field half">
+            <label for="customerName">Customer Name <span class="req">*</span></label>
+            <input id="customerName" class="icon-user" type="text" placeholder="Enter Full Name" required />
+          </div>
+          <div class="field half">
+            <label for="email">Email Address <span class="req">*</span></label>
+            <input id="email" class="icon-mail" type="email" placeholder="Enter Email Address" required />
+          </div>
+          <div class="field w-lg">
+            <label for="foreignNumber">Foreign Contact Number <span class="req">*</span></label>
+            <div class="phone-pair">
+              <select id="foreignCode" required aria-label="Foreign country code">
+                <option value="+971">🇦🇪 +971</option>
+                <option value="+1">🇺🇸 +1</option>
+                <option value="+44">🇬🇧 +44</option>
+                <option value="+65">🇸🇬 +65</option>
+                <option value="+966">🇸🇦 +966</option>
+                <option value="+974">🇶🇦 +974</option>
+                <option value="+965">🇰🇼 +965</option>
+                <option value="+968">🇴🇲 +968</option>
+                <option value="+973">🇧🇭 +973</option>
+                <option value="+61">🇦🇺 +61</option>
+                <option value="+64">🇳🇿 +64</option>
+                <option value="+60">🇲🇾 +60</option>
+                <option value="+49">🇩🇪 +49</option>
+                <option value="other">Other</option>
+              </select>
+              <input id="foreignNumber" type="tel" placeholder="Enter Number" required />
+            </div>
+          </div>
+          <div class="field w-lg">
+            <label for="indianNumber">Indian Contact Number</label>
+            <div class="phone-pair">
+              <select disabled aria-label="India code"><option>🇮🇳 +91</option></select>
+              <input id="indianNumber" type="tel" placeholder="Enter Number" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="group">
+        <div class="group-heading"><span class="bar"></span><h2>Current Residence Details</h2></div>
+        <div class="group-rule"></div>
+        <div class="grid">
+          <div class="field">
+            <label for="city">City of Residence</label>
+            <input id="city" type="text" placeholder="e.g. Dubai" />
+          </div>
+          <div class="field">
+            <label for="country">Country of Residence</label>
+            <select id="country">
+              <option value="" disabled selected>Select Country</option>
+              <option>United Arab Emirates</option>
+              <option>United States</option>
+              <option>United Kingdom</option>
+              <option>Singapore</option>
+              <option>Saudi Arabia</option>
+              <option>Qatar</option>
+              <option>Kuwait</option>
+              <option>Oman</option>
+              <option>Bahrain</option>
+              <option>Australia</option>
+              <option>New Zealand</option>
+              <option>Malaysia</option>
+              <option>Germany</option>
+              <option>India</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="field w-sm">
+            <label for="zip">Zip / Postal Code</label>
+            <input id="zip" type="text" placeholder="Postal Code" />
+          </div>
+        </div>
+      </section>
+
+      <section class="group">
+        <div class="group-heading"><span class="bar"></span><h2>Professional Details</h2></div>
+        <div class="group-rule"></div>
+        <div class="grid">
+          <div class="field">
+            <label for="company">Company Name</label>
+            <input id="company" type="text" placeholder="Employer / Company" />
+          </div>
+          <div class="field">
+            <label for="designation">Designation</label>
+            <input id="designation" type="text" placeholder="Job Title" />
+          </div>
+        </div>
+      </section>
+
+      <section class="group">
+        <div class="group-heading"><span class="bar"></span><h2>Preferences</h2></div>
+        <div class="group-rule"></div>
+        <div class="grid">
+          <div class="field">
+            <label>Property Looking For <span class="req">*</span></label>
+            <div class="pill-group" id="purposeGroup" data-field="purpose" role="group" aria-label="Property Looking For">
+              <button type="button" class="pill" data-value="End use">End use</button>
+              <button type="button" class="pill" data-value="Investment">Investment</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Family Size</label>
+            <div class="pill-group" id="familySizeGroup" data-field="familySize" role="group" aria-label="Family Size">
+              <button type="button" class="pill" data-value="2">2</button>
+              <button type="button" class="pill" data-value="3">3</button>
+              <button type="button" class="pill" data-value="4+">4+</button>
+            </div>
+          </div>
+          <div class="field full">
+            <label>Monthly Salary Range</label>
+            <div class="pill-group" id="salaryGroup" data-field="salary" role="group" aria-label="Monthly Salary Range">
+              <button type="button" class="pill" data-value="&lt; 4 Lakhs">&lt; 4 Lakhs</button>
+              <button type="button" class="pill" data-value="4 - 6 Lakhs">4 - 6 Lakhs</button>
+              <button type="button" class="pill" data-value="6 - 10 Lakhs">6 - 10 Lakhs</button>
+              <button type="button" class="pill" data-value="&gt; 10 Lakhs">&gt; 10 Lakhs</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="actions">
+        <span class="fine-print">By submitting, you agree to be contacted by our sales team regarding this site visit.</span>
+        <button type="button" class="reset" id="resetBtn2">Reset</button>
+        <button type="submit" class="submit">Submit</button>
+      </div>
+    </form>
+
+    <div class="confirm" id="confirmBlock">
+      <div class="confirm-card">
+        <div class="confirm-icon">✓</div>
+        <h2>Request Received</h2>
+        <p>Thank you — our overseas relationship team will reach out shortly to confirm the site visit.</p>
+        <details class="payload">
+          <summary>Data captured (for CRM field mapping)</summary>
+          <pre id="payloadOutput"></pre>
+        </details>
+        <div>
+          <button type="button" class="reset-link" id="resetBtn">Submit another response</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="note">
+    Prototype for internal review, styled to match the Casagrand acquisition form — no data is stored or transmitted yet. Once fields are frozen, this connects to Supabase and your CRM before going live.
+  </footer>
+</div>
+</div>
+
+<script>
+(function () {
+  var previewShell = document.getElementById('previewShell');
+  var desktopBtn = document.getElementById('desktopBtn');
+  var mobileBtn = document.getElementById('mobileBtn');
+
+  function setDevice(mode) {
+    previewShell.classList.toggle('mobile-sim', mode === 'mobile');
+    desktopBtn.classList.toggle('active', mode === 'desktop');
+    mobileBtn.classList.toggle('active', mode === 'mobile');
+  }
+  desktopBtn.addEventListener('click', function () { setDevice('desktop'); });
+  mobileBtn.addEventListener('click', function () { setDevice('mobile'); });
+
+  var PROJECTS_BY_ZONE = {
+    "Chennai": ["Project A — Chennai (placeholder)", "Project B — Chennai (placeholder)"],
+    "Bangalore": ["Project A — Bangalore (placeholder)", "Project B — Bangalore (placeholder)"],
+    "Hyderabad": ["Project A — Hyderabad (placeholder)", "Project B — Hyderabad (placeholder)"],
+    "Coimbatore": ["Project A — Coimbatore (placeholder)"],
+    "Pune": ["Project A — Pune (placeholder)"]
+  };
+
+  var zoneEl = document.getElementById('zone');
+  var projectEl = document.getElementById('project');
+
+  zoneEl.addEventListener('change', function () {
+    var list = PROJECTS_BY_ZONE[zoneEl.value] || [];
+    projectEl.innerHTML = '';
+    var placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = list.length ? 'Choose' : 'No options';
+    placeholder.disabled = true;
+    placeholder.selected = true;
+    projectEl.appendChild(placeholder);
+    list.forEach(function (name) {
+      var opt = document.createElement('option');
+      opt.value = name;
+      opt.textContent = name;
+      projectEl.appendChild(opt);
+    });
+    projectEl.disabled = list.length === 0;
+  });
+
+  // Pill groups behave like single-select radio groups
+  var pillGroups = document.querySelectorAll('.pill-group');
+  pillGroups.forEach(function (group) {
+    group.addEventListener('click', function (e) {
+      var btn = e.target.closest('.pill');
+      if (!btn) return;
+      group.querySelectorAll('.pill').forEach(function (p) {
+        p.setAttribute('aria-pressed', 'false');
+      });
+      btn.setAttribute('aria-pressed', 'true');
+      group.dataset.value = btn.dataset.value;
+      group.classList.remove('missing');
+    });
+  });
+
+  function pillValue(id) {
+    var group = document.getElementById(id);
+    return group ? (group.dataset.value || '') : '';
+  }
+
+  var form = document.getElementById('visitForm');
+  var confirmBlock = document.getElementById('confirmBlock');
+  var payloadOutput = document.getElementById('payloadOutput');
+  var resetBtn = document.getElementById('resetBtn');
+  var resetBtn2 = document.getElementById('resetBtn2');
+
+  function val(id) {
+    var el = document.getElementById(id);
+    return el ? el.value : '';
+  }
+
+  function resetAll() {
+    form.reset();
+    projectEl.innerHTML = '<option value="" selected>Pick zone</option>';
+    projectEl.disabled = true;
+    pillGroups.forEach(function (group) {
+      group.querySelectorAll('.pill').forEach(function (p) { p.setAttribute('aria-pressed', 'false'); });
+      delete group.dataset.value;
+      group.classList.remove('missing');
+    });
+    confirmBlock.classList.remove('show');
+    form.style.display = 'flex';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function markMissing(groupId, missing) {
+    var group = document.getElementById(groupId);
+    if (!group) return;
+    group.classList.toggle('missing', missing);
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    var customerType = pillValue('customerTypeGroup');
+    var purpose = pillValue('purposeGroup');
+
+    markMissing('customerTypeGroup', !customerType);
+    markMissing('purposeGroup', !purpose);
+
+    if (!form.checkValidity() || !customerType || !purpose) {
+      form.reportValidity();
+      if (!customerType) document.getElementById('customerTypeGroup').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      else if (!purpose) document.getElementById('purposeGroup').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    var foreignCode = val('foreignCode');
+    var indianNumber = val('indianNumber');
+
+    var payload = {
+      zone: val('zone'),
+      project: val('project'),
+      customer_type: customerType,
+      customer_name: val('customerName'),
+      foreign_contact_number: foreignCode + ' ' + val('foreignNumber'),
+      indian_contact_number: indianNumber ? ('+91 ' + indianNumber) : null,
+      email: val('email'),
+      city_of_residence: val('city') || null,
+      country_of_residence: val('country') || null,
+      zip_code: val('zip') || null,
+      company_name: val('company') || null,
+      designation: val('designation') || null,
+      property_looking_for: purpose,
+      family_size: pillValue('familySizeGroup') || null,
+      monthly_salary_range: pillValue('salaryGroup') || null,
+      submitted_at: new Date().toISOString()
+    };
+
+    payloadOutput.textContent = JSON.stringify(payload, null, 2);
+    form.style.display = 'none';
+    confirmBlock.classList.add('show');
+    confirmBlock.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  resetBtn.addEventListener('click', resetAll);
+  resetBtn2.addEventListener('click', resetAll);
+})();
+</script>
+</body>
+</html>
+
